@@ -1,0 +1,35 @@
+---
+- name: ping
+  hosts: all
+  tasks:
+    - name: ping hosts
+      ansible.builtin.ping:
+
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Hello world
+
+- name: apt update
+  hosts: ansibleHosts
+  tasks:
+    - name: update apt
+      apt:
+        update_cache: yes # Whether to update the apt package cache. This is useful when you want to ensure you are installing from the latest available package list
+        cache_valid_time: 3600 # (in seconds) for which the apt cache is considered valid. After this period, it will be refreshed
+    
+    - name: apt upgrade 
+      apt:
+        upgrade: yes
+
+    - name: apt install
+      apt:
+        name: "{{ item }}"
+        state: present # The desired state of the package. Common values are:
+                          # present — Ensures the package is installed.
+                          # absent — Ensures the package is not installed.
+                          # latest — Ensures the package is the latest version available.
+      with_items: 
+        - vim
+        - curl
+        - git
+
