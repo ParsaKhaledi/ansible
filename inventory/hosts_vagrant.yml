@@ -1,11 +1,5 @@
 all:
   children:
-    pcs:
-      hosts:
-        dell:
-          ansible_host: 127.0.0.1
-          ansible_user: phf
-          ansible_port: 22
     ansibleHosts:
       hosts:
         ansibleHost1:
