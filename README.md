@@ -21,11 +21,20 @@ ansible-vault decrypt host_vars/dell/vault.yml
 to edite encrypted file:
 ```
 ansible-vault edit host_vars/dell/vault.yml
-
 ```
-## Adhoc commands
+## Ad-hoc commands
 These command are just use for tests
 
 ### Ping
 for ping host or groups the fallowing command will be used
+```
 ansible all -m ping -i inventory/hosts.yml --ask-vault-pass # for using data in vault encrypted files
+```
+or you can use ping playbook
+```
+ansible-playbook -i inventory/hosts.yml playbook_ping.yaml --ask-vault-pass
+```
+To ping specific inventory hosts or groups use ansible-playbook as fallow:
+```
+ansible-playbook -i inventory/hosts.yml -l pcs  playbook_ping.yaml --ask-vault-pass
+```
