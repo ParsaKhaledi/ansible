@@ -11,9 +11,17 @@
       apt:
         upgrade: yes
 
-    - name: apt install
+    - name: apt install host_vars
       apt:
-        name: "{{ package_list }}"
+        name: "{{ apt_packages }}"
+        # name: "{{items}}"
+        state: present # The desired state of the package. Common values are:
+                          # present — Ensures the package is installed.
+                          # absent — Ensures the package is not installed.
+                          # latest — Ensures the package is the latest version available.
+    - name: apt install group_vars
+      apt:
+        name: "{{ apt_packages_group }}"
         # name: "{{items}}"
         state: present # The desired state of the package. Common values are:
                           # present — Ensures the package is installed.

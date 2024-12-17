@@ -1,28 +1,28 @@
-packages_to_install:
+apt_packages_group:
 - sysstat
-- wget
-- git
-- vim
-- nano
-- bash-completion
-- curl
-- htop
-- iftop
-# - ncdu
-- unzip
-- net-tools
-# - dnsutils
+# - wget
+# - git
+# - vim
+# - nano
+# - bash-completion
+# - curl
+# - htop
+# - iftop
+# # - ncdu
+# - unzip
+# - net-tools
+# # - dnsutils
 # - atop
-- sudo
-# - ntp
-# - fail2ban
-- software-properties-common
-- apache2-utils
-# - tcpdump
-# - telnet
-# - axel :  a program that downloads a file from a FTP or HTTP server through multiple connection
-- iptables-persistent
-# - ntp
+# - sudo
+# # - ntp
+# # - fail2ban
+# - software-properties-common
+# - apache2-utils
+# # - tcpdump
+# # - telnet
+# # - axel :  a program that downloads a file from a FTP or HTTP server through multiple connection
+# - iptables-persistent
+# # - ntp
 # - auditd
 # - libpwquality-common
 # - cracklib-runtime
