@@ -1,6 +1,6 @@
 ---
 - name: apt update
-  hosts: ansibleHosts
+  hosts: all
   tasks:
     - name: update apt
       apt:
@@ -13,13 +13,14 @@
 
     - name: apt install
       apt:
-        name: "{{ item }}"
+        name: "{{ package_list }}"
+        # name: "{{items}}"
         state: present # The desired state of the package. Common values are:
                           # present — Ensures the package is installed.
                           # absent — Ensures the package is not installed.
                           # latest — Ensures the package is the latest version available.
-      with_items: 
-        - vim
-        - curl
-        - git
+      # with_items: 
+      #   - vim
+      #   - curl
+      #   - git
 
