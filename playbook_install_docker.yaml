@@ -1,0 +1,80 @@
+---
+- name: Install Docker, configure proxy and NVIDIA runtime
+  hosts: servers
+  become: yes
+  vars_files:
+    - group_vars/all.yml
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        state: present
+
+    - name: Install Docker CE
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: yes
+
+    - name: Configure Docker service to use proxy
+      lineinfile:
+        path: /etc/systemd/system/docker.service.d/http-proxy.conf
+        create: yes
+        line: |
+          [Service]
+          Environment="HTTP_PROXY={{ http_proxy }}"
+          Environment="HTTPS_PROXY={{ https_proxy }}"
+      notify: Restart Docker
+
+    - name: Create /etc/systemd/system/docker.service.d directory
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+
+    - name: Install NVIDIA Docker runtime
+      shell: |
+        curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+        distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+        curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+        sudo apt-get update
+        sudo apt-get install -y nvidia-docker2={{ nvidia_runtime_version }}
+      notify: Restart Docker
+
+    - name: Configure Docker daemon to use NVIDIA runtime
+      copy:
+        content: |
+          {
+            "runtimes": {
+              "nvidia": {
+                "path": "nvidia-container-runtime",
+                "runtimeArgs": []
+              }
+            }
+          }
+        dest: /etc/docker/daemon.json
+      notify: Restart Docker
+
+  handlers:
+    - name: Restart Docker
+      service:
+        name: docker
+        state: restarted
